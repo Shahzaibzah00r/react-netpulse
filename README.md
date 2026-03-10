@@ -1,10 +1,10 @@
-# react-netpulse
+# @shahzaibzah00r/react-netpulse
 
 Real internet connectivity detection for React. Goes beyond `navigator.onLine`.
 
-[![npm version](https://img.shields.io/npm/v/react-netpulse)](https://www.npmjs.com/package/react-netpulse)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/react-netpulse)](https://bundlephobia.com/package/react-netpulse)
-[![license](https://img.shields.io/npm/l/react-netpulse)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/@shahzaibzah00r/react-netpulse)](https://www.npmjs.com/package/@shahzaibzah00r/react-netpulse)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/@shahzaibzah00r/react-netpulse)](https://bundlephobia.com/package/@shahzaibzah00r/react-netpulse)
+[![license](https://img.shields.io/npm/l/@shahzaibzah00r/react-netpulse)](LICENSE)
 
 ---
 
@@ -36,11 +36,11 @@ Real internet connectivity detection for React. Goes beyond `navigator.onLine`.
 ## Install
 
 ```bash
-npm install react-netpulse
+npm install @shahzaibzah00r/react-netpulse
 # or
-yarn add react-netpulse
+yarn add @shahzaibzah00r/react-netpulse
 # or
-pnpm add react-netpulse
+pnpm add @shahzaibzah00r/react-netpulse
 ```
 
 **Peer dependencies:** React ≥ 17 and react-dom ≥ 17 (already installed in any React project).
@@ -53,7 +53,7 @@ pnpm add react-netpulse
 
 ```tsx
 // _app.tsx / layout.tsx
-import { NetworkBanner } from 'react-netpulse';
+import { NetworkBanner } from '@shahzaibzah00r/react-netpulse';
 
 export default function Layout({ children }) {
   return (
@@ -68,7 +68,7 @@ export default function Layout({ children }) {
 ### Custom UI with the hook
 
 ```tsx
-import { useNetworkStatus } from 'react-netpulse';
+import { useNetworkStatus } from '@shahzaibzah00r/react-netpulse';
 
 function ConnectionIndicator() {
   const { isOnline, isChecking, quality, retry } = useNetworkStatus();
@@ -98,6 +98,8 @@ const handleSave = () => {
 ### Callbacks
 
 ```tsx
+import { useNetworkStatus } from '@shahzaibzah00r/react-netpulse';
+
 useNetworkStatus({
   onOffline: () => toast.error('Connection lost — your changes are saved locally.'),
   onOnline:  () => toast.success('Back online — syncing…'),
@@ -165,19 +167,60 @@ For true captive portal detection, point `probeUrl` at your own health endpoint:
 
 ---
 
-## Next.js App Router
+## Next.js
 
-The `<NetworkBanner>` is pre-marked with `'use client'`. No extra config needed.
+### App Router (Next.js 13+)
 
-If you use only `useNetworkStatus` in your own Server Component tree, wrap it in a client boundary:
+The `<NetworkBanner>` is pre-marked with `'use client'`. Add it directly to your root layout:
+
+```tsx
+// app/layout.tsx
+import { NetworkBanner } from '@shahzaibzah00r/react-netpulse';
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <NetworkBanner />
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+### Pages Router (Next.js 12 and below)
+
+Use `next/dynamic` with `ssr: false` to prevent server-side rendering of the banner (it uses `createPortal` which requires `document`):
+
+```tsx
+// pages/_app.tsx
+import dynamic from 'next/dynamic';
+
+const NetworkBanner = dynamic(
+  () => import('@shahzaibzah00r/react-netpulse').then((m) => m.NetworkBanner),
+  { ssr: false }
+);
+
+export default function MyApp({ Component, pageProps }) {
+  return (
+    <>
+      <NetworkBanner />
+      <Component {...pageProps} />
+    </>
+  );
+}
+```
+
+If you use only `useNetworkStatus` in a custom client component, wrap it in a client boundary (App Router only):
 
 ```tsx
 'use client';
-import { useNetworkStatus } from 'react-netpulse';
+import { useNetworkStatus } from '@shahzaibzah00r/react-netpulse';
 ```
 
 ---
 
 ## License
 
-MIT © Shahzaib
+MIT © Shahzaib <shahzaibzahoor7@gmail.com>
