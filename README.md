@@ -8,6 +8,12 @@ Real internet connectivity detection for React. Goes beyond `navigator.onLine`.
 
 ---
 
+## Demo
+
+![react-netpulse demo](./demo.gif)
+
+---
+
 ## Why not `navigator.onLine`?
 
 `navigator.onLine` returns `true` if the device is connected to **any** network — including hotel WiFi login pages, LANs with no upstream routing, and cables plugged into powered-off routers. Your users will see no error banner despite having no usable internet.

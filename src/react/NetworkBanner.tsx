@@ -186,22 +186,29 @@ export function NetworkBanner({
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
+      if (timerRef.current !== null) clearTimeout(timerRef.current);
     };
   }, []);
 
   // Show / hide the banner in response to connectivity changes.
+  // NOTE: showOnline is intentionally NOT in the dependency array — including it
+  // would re-run this effect (and its cleanup) when we set showOnline=true,
+  // which would clear the auto-hide timer before it fires.
   useEffect(() => {
     const wasOnline = prevOnlineRef.current;
     prevOnlineRef.current = isOnline;
 
-    if (!isOnline && !showOnline) {
-      // Went offline — slide in.
+    if (!isOnline) {
+      // Went offline — cancel any pending hide timer and slide in.
+      if (timerRef.current !== null) clearTimeout(timerRef.current);
+      setShowOnline(false);
       setAnimOut(false);
       setVisible(true);
+      return;
     }
 
     if (isOnline && !wasOnline) {
-      // Just came back online — show success toast, then slide out.
+      // Just came back online — show success toast, then auto-hide.
       if (timerRef.current !== null) clearTimeout(timerRef.current);
       setShowOnline(true);
       setAnimOut(false);
@@ -209,24 +216,32 @@ export function NetworkBanner({
 
       timerRef.current = setTimeout(() => {
         if (!isMountedRef.current) return;
-        setAnimOut(true); // trigger slide-out animation
+        setAnimOut(true);
 
         timerRef.current = setTimeout(() => {
           if (!isMountedRef.current) return;
           setVisible(false);
           setShowOnline(false);
           setAnimOut(false);
-        }, 380); // matches CSS animation duration
+        }, 380);
       }, onlineMessageDuration);
     }
-
-    return () => {
-      if (timerRef.current !== null) clearTimeout(timerRef.current);
-    };
-  }, [isOnline, onlineMessageDuration, showOnline]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOnline, onlineMessageDuration]);
 
   // SSR or not yet triggered — render nothing.
   if (typeof document === "undefined" || !visible) return null;
+
+  const dismiss = () => {
+    if (timerRef.current !== null) clearTimeout(timerRef.current);
+    setAnimOut(true);
+    timerRef.current = setTimeout(() => {
+      if (!isMountedRef.current) return;
+      setVisible(false);
+      setShowOnline(false);
+      setAnimOut(false);
+    }, 380);
+  };
 
   const {
     offline = "No Internet Connection",
@@ -246,15 +261,15 @@ export function NetworkBanner({
       style={{
         // ── Defaults (can all be overridden via bannerStyle) ──────────────
         position: "fixed",
-        top: 0,
+        top: 16,
         left: "50%",
         transform: "translate(-50%, 0)",
         zIndex,
         display: "flex",
         alignItems: "center",
         gap: 10,
-        padding: "10px 20px",
-        borderRadius: "0 0 12px 12px",
+        padding: "10px 16px 10px 20px",
+        borderRadius: 12,
         fontSize: 14,
         fontWeight: 600,
         fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
@@ -312,7 +327,7 @@ export function NetworkBanner({
           disabled={isChecking}
           aria-label="Retry connection"
           style={{
-            marginLeft: 12,
+            marginLeft: 4,
             padding: "5px 14px",
             border: "none",
             borderRadius: 8,
@@ -334,6 +349,42 @@ export function NetworkBanner({
           {isChecking ? "Checking\u2026" : "Retry"}
         </button>
       )}
+
+      {/* Close (×) button — always visible */}
+      <button
+        onClick={dismiss}
+        aria-label="Close notification"
+        style={{
+          marginLeft: 6,
+          padding: 0,
+          width: 24,
+          height: 24,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          border: "none",
+          borderRadius: "50%",
+          backgroundColor: "rgba(255,255,255,0.20)",
+          color: "#fff",
+          fontWeight: 700,
+          fontSize: 14,
+          fontFamily: "inherit",
+          cursor: "pointer",
+          flexShrink: 0,
+          lineHeight: 1,
+          transition: "background-color 0.15s",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+            "rgba(255,255,255,0.35)";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+            "rgba(255,255,255,0.20)";
+        }}
+      >
+        &#x2715;
+      </button>
     </div>
   );
 
