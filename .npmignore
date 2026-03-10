@@ -6,3 +6,5 @@ GUIDE.md
 .gitignore
 node_modules/
 *.log
+dist/*.map
+*.gif
