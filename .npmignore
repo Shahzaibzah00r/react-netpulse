@@ -1,0 +1,8 @@
+src/
+example/
+*.config.ts
+tsconfig.json
+GUIDE.md
+.gitignore
+node_modules/
+*.log

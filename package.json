@@ -1,0 +1,63 @@
+{
+  "name": "react-netpulse",
+  "version": "1.0.0",
+  "description": "Reliable real internet connectivity detection for React — goes beyond navigator.onLine with live HTTP probing, exponential backoff, connection quality reporting, and an offline action queue.",
+  "keywords": [
+    "react",
+    "network",
+    "connectivity",
+    "offline",
+    "online",
+    "internet",
+    "detection",
+    "hook",
+    "typescript"
+  ],
+  "author": "Your Name <you@example.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/yourusername/react-netpulse#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/react-netpulse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/react-netpulse/issues"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
