@@ -1,6 +1,6 @@
 {
   "name": "@shahzaibzah00r/react-netpulse",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Reliable real internet connectivity detection for React — goes beyond navigator.onLine with live HTTP probing, exponential backoff, connection quality reporting, and an offline action queue.",
   "keywords": [
     "react",
