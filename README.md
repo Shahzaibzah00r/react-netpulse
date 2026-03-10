@@ -180,4 +180,4 @@ import { useNetworkStatus } from 'react-netpulse';
 
 ## License
 
-MIT © Your Name
+MIT © Shahzaib
