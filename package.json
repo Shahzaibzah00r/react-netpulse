@@ -15,13 +15,13 @@
   ],
   "author": "Your Name <you@example.com>",
   "license": "MIT",
-  "homepage": "https://github.com/yourusername/react-netpulse#readme",
+  "homepage": "https://github.com/Shahzaibzah00r/react-netpulse#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/react-netpulse.git"
+    "url": "git+https://github.com/Shahzaibzah00r/react-netpulse.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/react-netpulse/issues"
+    "url": "https://github.com/Shahzaibzah00r/react-netpulse/issues"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
